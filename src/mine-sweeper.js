@@ -23,9 +23,63 @@ const { NotImplementedError } = require('../extensions/index.js');
  *  [1, 1, 1]
  * ]
  */
-function minesweeper(/* matrix */) {
-  throw new NotImplementedError('Not implemented');
-  // remove line with error and write your code here
+function minesweeper(matrix) {
+  const gameBoard = matrix.reduce((acc, item) => {
+    const itemFilled = item.map((elm) => {
+      elm = 0;
+      return elm;
+    });
+    acc.push(itemFilled);
+    return acc;
+  }, []);
+
+  const matrixRowSize = gameBoard.length - 1;
+  const matrixColSize = gameBoard[0].length - 1;
+
+  matrix.forEach((item, rowID) => {
+    item.forEach((elm, colID) => {
+      if (elm) {
+        const rowIndexUp = rowID - 1;
+        const rowIndexDown = rowID + 1;
+        const colIndexLeft = colID - 1;
+        const colIndexRight = colID + 1;
+
+        const rowUpIsInside = rowIndexUp >= 0;
+        const rowDownIsInside = rowIndexDown <= matrixRowSize;
+        const colLeftIsInside = colIndexLeft >= 0;
+        const colRightIsInside = colIndexRight <= matrixColSize;
+        
+        if (rowUpIsInside) {
+          if (colLeftIsInside) {
+            const NW = gameBoard[rowIndexUp][colIndexLeft] += 1;
+          }
+          const N = gameBoard[rowIndexUp][colID] += 1;
+          if (colRightIsInside) {
+            const NE = gameBoard[rowIndexUp][colIndexRight] += 1;
+          }
+        }
+        
+        if (colLeftIsInside) {
+          const W = gameBoard[rowID][colIndexLeft] += 1;
+        }
+        if (colRightIsInside) {
+          const E = gameBoard[rowID][colIndexRight] += 1;
+        }
+
+        if (rowDownIsInside) {
+          if (colLeftIsInside) {
+            const SW = gameBoard[rowIndexDown][colIndexLeft] += 1;
+          }
+          const S = gameBoard[rowIndexDown][colID] += 1;
+          if (colRightIsInside) {
+            const SE = gameBoard[rowIndexDown][colIndexRight] += 1;
+          }
+        }
+      }
+    });
+  });
+
+  return gameBoard;
 }
 
 module.exports = {
